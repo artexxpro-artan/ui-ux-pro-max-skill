@@ -220,6 +220,29 @@ export async function listBundledSubSkills(): Promise<string[]> {
  * Install the bundled sub-skills as siblings of the orchestrator skill, so a
  * single `uipro init` delivers all 7 skills instead of only ui-ux-pro-max.
  */
+const CURSOR_HAND_AUTHORED_SKILL = join(ASSETS_DIR, 'templates', 'cursor', 'SKILL.md');
+const CURSOR_HAND_AUTHORED_REFERENCES = join(ASSETS_DIR, 'templates', 'cursor', 'references');
+
+async function installCursorHandAuthoredSkill(skillDir: string, isGlobal: boolean): Promise<void> {
+  if (!(await exists(CURSOR_HAND_AUTHORED_SKILL))) {
+    return;
+  }
+
+  let content = await readFile(CURSOR_HAND_AUTHORED_SKILL, 'utf-8');
+  const scriptPath = isGlobal
+    ? join(homedir(), '.cursor', 'skills', 'ui-ux-pro-max', 'scripts', 'search.py')
+    : '.cursor/skills/ui-ux-pro-max/scripts/search.py';
+  content = content.replaceAll('.cursor/skills/ui-ux-pro-max/scripts/search.py', scriptPath);
+  await writeFile(join(skillDir, 'SKILL.md'), content, 'utf-8');
+
+  if (await exists(CURSOR_HAND_AUTHORED_REFERENCES)) {
+    const referencesTarget = join(skillDir, 'references');
+    await ensureCleanDir(referencesTarget);
+    await mkdir(referencesTarget, { recursive: true });
+    await cp(CURSOR_HAND_AUTHORED_REFERENCES, referencesTarget, { recursive: true });
+  }
+}
+
 async function copySubSkills(skillsParentDir: string, force: boolean): Promise<void> {
   const skillsSource = join(ASSETS_DIR, 'skills');
   if (!(await exists(skillsSource))) return;
@@ -259,8 +282,6 @@ export async function generatePlatformFiles(
   // Create directory structure
   await mkdir(skillDir, { recursive: true });
 
-  // Render and write skill file (pass isGlobal to adjust paths)
-  const skillContent = await renderSkillFile(config, isGlobal);
   const skillFilePath = join(skillDir, config.folderStructure.filename);
 
   const fileAlreadyExists = await exists(skillFilePath);
@@ -269,7 +290,12 @@ export async function generatePlatformFiles(
     return [];
   }
 
-  await writeFile(skillFilePath, skillContent, 'utf-8');
+  if (aiType === 'cursor' && (await exists(CURSOR_HAND_AUTHORED_SKILL))) {
+    await installCursorHandAuthoredSkill(skillDir, isGlobal);
+  } else {
+    const skillContent = await renderSkillFile(config, isGlobal);
+    await writeFile(skillFilePath, skillContent, 'utf-8');
+  }
   createdFolders.push(config.folderStructure.root);
 
   // Copy data and scripts into the skill directory (self-contained)
