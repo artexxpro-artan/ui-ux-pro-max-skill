@@ -1,0 +1,19 @@
+# Fixito — uiux.artexxpro.ir (static dashboard)
+services:
+  uiux-app:
+    build: .
+    image: uiux-dashboard:local
+    container_name: uiux-app
+    restart: unless-stopped
+    networks:
+      - traefik-public
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  traefik-public:
+    external: true

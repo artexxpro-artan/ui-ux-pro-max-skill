@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI/UX Pro Max — داشبورد طراحی ArtexxPro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #09090b;
+      --bg-elevated: #111114;
+      --bg-card: #18181b;
+      --fg: #fafafa;
+      --fg-muted: #a1a1aa;
+      --accent: #2563eb;
+      --accent-2: #7c3aed;
+      --accent-glow: rgba(37, 99, 235, 0.35);
+      --border: #27272a;
+      --success: #22c55e;
+      --radius: 16px;
+      --font: "Vazirmatn", system-ui, sans-serif;
+      --font-en: "Space Grotesk", monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37,99,235,.18), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(124,58,237,.12), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .wrap { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 0; border-bottom: 1px solid var(--border); margin-bottom: 3rem;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); font-family: var(--font-en); }
+    .nav-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .nav-links a { color: var(--fg-muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--fg); }
+    .badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(37,99,235,.12); border: 1px solid rgba(37,99,235,.3);
+      color: #93c5fd; padding: .35rem .75rem; border-radius: 999px; font-size: .75rem; font-weight: 600;
+    }
+    .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+    .hero { text-align: center; padding: 3rem 0 4rem; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
+    .hero h1 em { font-style: normal; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--fg-muted); max-width: 640px; margin: 0 auto 2rem; font-size: 1.05rem; }
+    .stats { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; }
+    .stat { text-align: center; }
+    .stat strong { display: block; font-size: 1.75rem; font-family: var(--font-en); color: var(--fg); }
+    .stat span { font-size: .8rem; color: var(--fg-muted); }
+    section { margin-bottom: 4rem; }
+    .section-head { margin-bottom: 1.75rem; }
+    .section-head h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: .5rem; }
+    .section-head p { color: var(--fg-muted); font-size: .95rem; }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(37,99,235,.4);
+      box-shadow: 0 12px 40px var(--accent-glow);
+    }
+    .card-preview {
+      height: 140px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-preview .mock { position: absolute; inset: 0; }
+    .card-body { padding: 1.1rem 1.25rem 1.25rem; }
+    .card-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: .35rem; }
+    .card-body p { font-size: .82rem; color: var(--fg-muted); margin-bottom: .75rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .tag {
+      font-size: .7rem; padding: .2rem .55rem; border-radius: 6px;
+      background: rgba(255,255,255,.05); color: var(--fg-muted); border: 1px solid var(--border);
+      font-family: var(--font-en);
+    }
+    .instructions { display: grid; gap: 1.25rem; }
+    @media (min-width: 900px) { .instructions { grid-template-columns: repeat(3, 1fr); } }
+    .inst-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      height: 100%;
+    }
+    .inst-num {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-en); font-weight: 700; font-size: .9rem; margin-bottom: 1rem;
+    }
+    .inst-card h3 { font-size: 1.05rem; margin-bottom: .75rem; }
+    .inst-card ul { list-style: none; font-size: .88rem; color: var(--fg-muted); }
+    .inst-card li { padding: .35rem 0; border-bottom: 1px solid var(--border); }
+    .inst-card li:last-child { border: none; }
+    .inst-card li strong { color: var(--fg); }
+    pre, code {
+      font-family: var(--font-en), ui-monospace, monospace;
+      font-size: .78rem;
+      direction: ltr; text-align: left;
+    }
+    .code-block {
+      background: #0c0c0e;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      overflow-x: auto;
+      margin: .75rem 0;
+      position: relative;
+    }
+    .code-block pre { white-space: pre-wrap; word-break: break-word; color: #e4e4e7; }
+    .copy-btn {
+      position: absolute; top: .6rem; left: .6rem;
+      background: rgba(37,99,235,.2); border: 1px solid rgba(37,99,235,.4);
+      color: #93c5fd; padding: .3rem .65rem; border-radius: 8px;
+      font-size: .72rem; cursor: pointer; font-family: var(--font);
+      transition: background .2s;
+    }
+    .copy-btn:hover { background: rgba(37,99,235,.35); }
+    .api-box {
+      background: linear-gradient(135deg, rgba(37,99,235,.08), rgba(124,58,237,.08));
+      border: 1px solid rgba(37,99,235,.25);
+      border-radius: calc(var(--radius) + 4px);
+      padding: 2rem;
+    }
+    .api-box h2 { font-size: 1.5rem; margin-bottom: .5rem; }
+    .api-box > p { color: var(--fg-muted); margin-bottom: 1.5rem; }
+    .prompt-examples { display: grid; gap: 1rem; margin-top: 1.5rem; }
+    @media (min-width: 768px) { .prompt-examples { grid-template-columns: 1fr 1fr; } }
+    .prompt-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+    }
+    .prompt-card h4 { font-size: .85rem; color: #93c5fd; margin-bottom: .5rem; }
+    .prompt-card p { font-size: .82rem; color: var(--fg-muted); line-height: 1.6; }
+    footer {
+      text-align: center; padding: 2rem 0; border-top: 1px solid var(--border);
+      color: var(--fg-muted); font-size: .82rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    /* Gallery mock previews */
+    .mock-saas { background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0052ff22 100%); }
+    .mock-saas::after { content: ""; position: absolute; bottom: 12px; right: 12px; left: 12px; height: 60px; background: rgba(255,255,255,.06); border-radius: 8px; border: 1px solid rgba(255,255,255,.08); }
+    .mock-glass { background: linear-gradient(135deg, #667eea44, #764ba244), #1a1a2e; backdrop-filter: blur(20px); }
+    .mock-glass::before { content: ""; position: absolute; top: 20px; right: 20px; width: 60%; height: 40px; background: rgba(255,255,255,.12); border-radius: 12px; border: 1px solid rgba(255,255,255,.2); }
+    .mock-bento { background: #f5f5f7; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 12px; }
+    .mock-bento span { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .mock-bento span:first-child { grid-row: span 2; }
+    .mock-fintech { background: linear-gradient(180deg, #030304, #0f1115); }
+    .mock-fintech::after { content: ""; position: absolute; bottom: 16px; right: 16px; width: 80px; height: 28px; background: linear-gradient(90deg, #ea580c, #f7931a); border-radius: 999px; }
+    .mock-landing { background: linear-gradient(160deg, #18181b, #27272a); }
+    .mock-landing::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 70%; height: 24px; background: rgba(37,99,235,.5); border-radius: 6px; }
+    .mock-ecom { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+    .mock-ecom::after { content: ""; position: absolute; bottom: 10px; right: 10px; left: 10px; height: 50px; background: #fff; border-radius: 8px; opacity: .9; }
+    .mock-portfolio { background: #fafafa; }
+    .mock-portfolio::before { content: ""; position: absolute; inset: 12px; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; background: repeating-linear-gradient(90deg, #e4e4e7 0 30%, transparent 30% 33%); }
+    .mock-health { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
+    .mock-edu { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <div class="logo">ArtexxPro <span>UI/UX Pro Max</span></div>
+      <div class="nav-links">
+        <a href="#gallery">گالری</a>
+        <a href="#guide">راهنما</a>
+        <a href="#api">فعال‌سازی</a>
+        <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <span class="badge">Fixito · uiux.artexxpro.ir</span>
+    </nav>
+
+    <header class="hero">
+      <span class="badge" style="margin-bottom:1rem">اسکیل طراحی هوشمند برای Cursor</span>
+      <h1>هر UI که می‌خواهید،<br><em>با داده طراحی کنید</em></h1>
+      <p>
+        داشبورد رسمی UI/UX Pro Max روی ArtexxPro — ۸۴ استایل، ۱۹۲ پالت رنگ، ۹۸ راهنمای UX،
+        و ۲۲ استک فناوری. با اسکیل در Cursor، لندینگ، داشبورد و صفحات خاص را سریع‌تر و حرفه‌ای‌تر بسازید.
+      </p>
+      <div class="stats">
+        <div class="stat"><strong>84</strong><span>استایل UI</span></div>
+        <div class="stat"><strong>192</strong><span>پالت رنگ</span></div>
+        <div class="stat"><strong>22</strong><span>استک</span></div>
+        <div class="stat"><strong>7</strong><span>اسکیل مرتبط</span></div>
+      </div>
+    </header>
+
+    <section id="gallery">
+      <div class="section-head">
+        <h2>گالری قالب‌ها و دیزاین‌ها</h2>
+        <p>نمونه‌هایی از آنچه با پرامپت مناسب و اسکیل ui-ux-pro-max در Cursor قابل ساخت است</p>
+      </div>
+      <div class="gallery">
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-saas"></div></div>
+          <div class="card-body">
+            <h3>داشبورد SaaS / Fintech</h3>
+            <p>Glassmorphism، Bento Grid، نمودار زنده، تم تیره/روشن</p>
+            <div class="tags"><span class="tag">dashboard</span><span class="tag">react</span><span class="tag">shadcn</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-glass"></div></div>
+          <div class="card-body">
+            <h3>لندینگ Glassmorphism</h3>
+            <p>شیشه مات، بلور پس‌زمینه، CTA درخشان، عمق لایه‌ای</p>
+            <div class="tags"><span class="tag">landing</span><span class="tag">tailwind</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-bento"></div></div>
+          <div class="card-body">
+            <h3>Bento Box Grid</h3>
+            <p>کارت‌های نامتقارن، استایل اپل، نمایش فیچرها</p>
+            <div class="tags"><span class="tag">marketing</span><span class="tag">nextjs</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-fintech"></div></div>
+          <div class="card-body">
+            <h3>DeFi / Web3 موبایل</h3>
+            <p>تم تیره، نارنجی بیت‌کوین، داده monospace، اعتماد بصری</p>
+            <div class="tags"><span class="tag">mobile</span><span class="tag">flutter</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-landing"></div></div>
+          <div class="card-body">
+            <h3>لندینگ SaaS B2B</h3>
+            <p>Hero + متریک + How it works + CTA، تبدیل بالا</p>
+            <div class="tags"><span class="tag">landing</span><span class="tag">html-tailwind</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-ecom"></div></div>
+          <div class="card-body">
+            <h3>فروشگاه آنلاین</h3>
+            <p>گرید محصول، فیلتر، سبد خرید، اعتماد و امنیت پرداخت</p>
+            <div class="tags"><span class="tag">e-commerce</span><span class="tag">vue</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-portfolio"></div></div>
+          <div class="card-body">
+            <h3>پورتفولیو خلاق</h3>
+            <p>Masonry Grid، تایپوگرافی مینیمال، تم روشن/تیره</p>
+            <div class="tags"><span class="tag">portfolio</span><span class="tag">astro</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-health"></div></div>
+          <div class="card-body">
+            <h3>سلامت و Wellness</h3>
+            <p>رنگ‌های آرام، فضای سفید، دسترسی‌پذیری AA</p>
+            <div class="tags"><span class="tag">health</span><span class="tag">accessibility</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-preview"><div class="mock mock-edu"></div></div>
+          <div class="card-body">
+            <h3>پلتفرم آموزشی</h3>
+            <p>Progress، کارت دوره، داشبورد دانشجو/مدرس</p>
+            <div class="tags"><span class="tag">edtech</span><span class="tag">laravel</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="guide">
+      <div class="section-head">
+        <h2>سه بخش راهنمای استفاده</h2>
+        <p>از نصب اسکیل تا پرامپت‌های آماده برای هر نوع صفحه</p>
+      </div>
+      <div class="instructions">
+        <div class="inst-card">
+          <div class="inst-num">۱</div>
+          <h3>نصب و استفاده در کد</h3>
+          <ul>
+            <li><strong>Cloud:</strong> اسکیل در <code>.cursor/skills/</code> ریپو است</li>
+            <li><strong>Global:</strong> <code>npx ui-ux-pro-max-cli init --ai cursor --global</code></li>
+            <li><strong>جستجو:</strong> اجرای <code>search.py --design-system</code></li>
+            <li><strong>ذخیره:</strong> فلگ <code>--persist</code> برای design-system/</li>
+            <li><strong>استک:</strong> <code>--stack react|nextjs|tailwind</code></li>
+          </ul>
+          <div class="code-block">
+            <button class="copy-btn" data-copy="install-cmd">کپی</button>
+            <pre id="install-cmd">python3 .cursor/skills/ui-ux-pro-max/scripts/search.py "SaaS fintech dashboard dark" --design-system -p "MyApp"</pre>
+          </div>
+        </div>
+        <div class="inst-card">
+          <div class="inst-num">۲</div>
+          <h3>پرامپت برای داشبورد</h3>
+          <ul>
+            <li>نوع محصول + صنعت + کلمات کلیدی</li>
+            <li>درخواست <strong>design system</strong> قبل از کد</li>
+            <li>ذکر استک پروژه (React, Next, …)</li>
+            <li>تعداد ویجت و نقش کاربر</li>
+          </ul>
+          <div class="code-block">
+            <button class="copy-btn" data-copy="dash-prompt">کپی</button>
+            <pre id="dash-prompt">با ui-ux-pro-max یک داشبورد آنالیتیکس SaaS بساز.
+اول search.py --design-system اجرا کن.
+شامل: sidebar، KPI cards، نمودار خطی، جدول تراکنش‌ها.
+استک: Next.js + shadcn/ui + Tailwind. تم تیره.</pre>
+          </div>
+        </div>
+        <div class="inst-card">
+          <div class="inst-num">۳</div>
+          <h3>پرامپت لندینگ و صفحات خاص</h3>
+          <ul>
+            <li><strong>لندینگ:</strong> Hero, Social proof, Pricing, FAQ</li>
+            <li><strong>صفحه خاص:</strong> checkout، پروفایل، تنظیمات</li>
+            <li>از <code>--domain landing|ux|chart</code> استفاده کنید</li>
+            <li>برای صفحه تکی: <code>--page "checkout"</code></li>
+          </ul>
+          <div class="code-block">
+            <button class="copy-btn" data-copy="land-prompt">کپی</button>
+            <pre id="land-prompt">لندینگ محصول AI با ui-ux-pro-max طراحی کن.
+استایل: glassmorphism، مخاطب: تیم‌های فنی.
+بخش‌ها: Hero، Features (bento)، Testimonials، Pricing، CTA.
+موبایل‌اول، WCAG AA.</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="api">
+      <div class="api-box">
+        <h2>🔑 کد فعال‌سازی — اسکیل را به چت اضافه کنید</h2>
+        <p>متن زیر را کپی کرده و در <strong>اولین پیام</strong> هر چت Cursor (یا Cloud Agent) بچسبانید تا اسکیل فعال شود:</p>
+        <div class="code-block" style="margin-bottom:1.25rem">
+          <button class="copy-btn" data-copy="activate-code">کپی کد فعال‌سازی</button>
+          <pre id="activate-code">@ui-ux-pro-max
+
+از این چت به بعد از اسکیل ui-ux-pro-max برای تمام تصمیمات UI/UX استفاده کن.
+
+قوانین:
+1. قبل از نوشتن UI، حتماً design system بگیر:
+   python3 .cursor/skills/ui-ux-pro-max/scripts/search.py "&lt;product&gt; &lt;industry&gt; &lt;keywords&gt;" --design-system -p "&lt;Project&gt;"
+2. برای جزئیات: --domain style|color|typography|ux|landing|chart
+3. برای استک پروژه: --stack react|nextjs|html-tailwind|shadcn
+4. دسترسی‌پذیری WCAG AA، موبایل‌اول، و بدون emoji به‌جای آیکون
+
+اگر اسکیل در دسترس نیست، نصب کن:
+npx ui-ux-pro-max-cli init --ai cursor --global</pre>
+        </div>
+        <p style="font-size:.88rem;color:var(--fg-muted);margin-bottom:1rem">یا با یک خط کوتاه:</p>
+        <div class="code-block">
+          <button class="copy-btn" data-copy="short-code">کپی</button>
+          <pre id="short-code">/ui-ux-pro-max از design-system شروع کن و یک [داشبورد SaaS / لندینگ فروشگاه / صفحه checkout] با Tailwind بساز</pre>
+        </div>
+        <div class="prompt-examples">
+          <div class="prompt-card">
+            <h4>📊 داشبورد</h4>
+            <p>«داشبورد مدیریت انبار با KPI، نمودار موجودی، و جدول سفارشات — تم تیره، shadcn»</p>
+          </div>
+          <div class="prompt-card">
+            <h4>🚀 لندینگ</h4>
+            <p>«لندینگ استارتاپ فین‌تک با Hero ویدیویی، متریک‌های زنده، و pricing سه‌تایی»</p>
+          </div>
+          <div class="prompt-card">
+            <h4>🛒 صفحه خاص</h4>
+            <p>«صفحه checkout با progress bar، خلاصه سفارش، و فرم پرداخت accessible»</p>
+          </div>
+          <div class="prompt-card">
+            <h4>📱 موبایل</h4>
+            <p>«اپ React Native فیتنس با bottom nav، کارت تمرین، و انیمیشن spring»</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>UI/UX Pro Max · ArtexxPro · Deployed via <a href="https://fixito.artexxpro.ir">Fixito</a></p>
+      <p style="margin-top:.5rem"><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill">github.com/nextlevelbuilder/ui-ux-pro-max-skill</a></p>
+    </footer>
+  </div>
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.copy;
+        const text = document.getElementById(id)?.textContent || '';
+        navigator.clipboard.writeText(text).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = '✓ کپی شد';
+          setTimeout(() => btn.textContent = orig, 1500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

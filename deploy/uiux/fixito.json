@@ -1,0 +1,29 @@
+{
+  "name": "UI/UX Pro Max — داشبورد ArtexxPro",
+  "slug": "uiux",
+  "compose_file": "/opt/cicd/apps/uiux/docker-compose.fixito.yml",
+  "compose_workdir": "/opt/cicd/apps/uiux",
+  "network": "traefik-public",
+  "containers": ["uiux-app"],
+  "domains": ["uiux.artexxpro.ir"],
+  "service_port": 80,
+  "health_path": "/api/health",
+  "expected_surface": "html",
+  "traefik_output": "fixito-uiux.yml",
+  "traefik_generate": true,
+  "stages": {
+    "production": {
+      "enabled": true,
+      "domains": ["uiux.artexxpro.ir"],
+      "containers": ["uiux-app"],
+      "service_port": 80,
+      "health_path": "/api/health"
+    }
+  },
+  "env": {
+    "TRAEFIK_NETWORK": "traefik-public",
+    "FIXITO_DOMAIN": "uiux.artexxpro.ir"
+  },
+  "health_urls": ["https://uiux.artexxpro.ir/api/health"],
+  "source": "fixito"
+}
