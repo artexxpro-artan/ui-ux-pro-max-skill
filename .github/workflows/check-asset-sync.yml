@@ -7,6 +7,8 @@ on:
       - "cli/assets/**"
       - ".claude/skills/ui-ux-pro-max/data/**"
       - ".claude/skills/ui-ux-pro-max/scripts/**"
+      - ".cursor/skills/ui-ux-pro-max/data/**"
+      - ".cursor/skills/ui-ux-pro-max/scripts/**"
       - "cli/scripts/sync-assets.mjs"
       - ".github/workflows/check-asset-sync.yml"
   push:
@@ -16,10 +18,12 @@ on:
       - "cli/assets/**"
       - ".claude/skills/ui-ux-pro-max/data/**"
       - ".claude/skills/ui-ux-pro-max/scripts/**"
+      - ".cursor/skills/ui-ux-pro-max/data/**"
+      - ".cursor/skills/ui-ux-pro-max/scripts/**"
 
 jobs:
   check-assets:
-    name: cli/assets and .claude/skills/ui-ux-pro-max must match src/ui-ux-pro-max
+    name: cli/assets and orchestrator skill copies must match src/ui-ux-pro-max
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,8 +33,8 @@ jobs:
       # check:assets runs `node scripts/sync-assets.mjs --check`, which uses only
       # node builtins (no npm install needed) and normalizes CRLF/LF before
       # hashing, so it compares content rather than line endings. It checks
-      # both cli/assets/ AND .claude/skills/ui-ux-pro-max/{data,scripts} --
-      # the latter is what Claude Code actually loads when this repo is
-      # installed as a plugin, and previously had no sync check at all.
+      # cli/assets/, .claude/skills/ui-ux-pro-max/{data,scripts}, and
+      # .cursor/skills/ui-ux-pro-max/{data,scripts} -- the latter two are what
+      # each platform loads when this repo is used as a plugin or for Cursor.
       - name: Check assets are in sync with source of truth
         run: npm --prefix cli run check:assets

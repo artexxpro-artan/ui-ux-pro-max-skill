@@ -27,14 +27,16 @@ const skillsSourceRoot = join(repoRoot, '.claude', 'skills');
 const skillsAssetRoot = join(assetRoot, 'skills');
 const subSkills = ['banner-design', 'brand', 'design', 'design-system', 'slides', 'ui-styling'];
 
-// The repo's own .claude/skills/ui-ux-pro-max/{data,scripts} is a second,
-// independent copy of src/ui-ux-pro-max/{data,scripts} -- it's what Claude
-// Code actually loads when this repo is installed as a plugin. Nothing
-// previously checked it against src/, so it silently drifted (missing stack
-// CSVs, stale content in several data files). SKILL.md there is hand-authored
-// (not template-rendered like the CLI's copy), so only data/ and scripts/
-// are mirrored -- never templates/ or SKILL.md itself.
-const orchestratorSkillTargetRoot = join(skillsSourceRoot, 'ui-ux-pro-max');
+// The repo's own .claude/skills/ui-ux-pro-max/{data,scripts} and
+// .cursor/skills/ui-ux-pro-max/{data,scripts} are independent copies of
+// src/ui-ux-pro-max/{data,scripts} -- what each platform actually loads when
+// this repo is used as a plugin or checked out for Cursor. SKILL.md in each
+// is hand-authored (not template-rendered like the CLI's copy), so only
+// data/ and scripts/ are mirrored -- never templates/ or SKILL.md itself.
+const orchestratorSkillTargets = [
+  { root: join(skillsSourceRoot, 'ui-ux-pro-max'), label: '.claude/skills/ui-ux-pro-max' },
+  { root: join(repoRoot, '.cursor', 'skills', 'ui-ux-pro-max'), label: '.cursor/skills/ui-ux-pro-max' },
+];
 const orchestratorDirsToSync = ['data', 'scripts'];
 
 // ponytail: only text is bundled. Excludes (a) heavy binary assets — the
@@ -151,15 +153,11 @@ async function checkAssets() {
     await diffDir(join(skillsSourceRoot, name), join(skillsAssetRoot, name), `skills/${name}`, drift);
   }
 
-  // Orchestrator skill's own data/scripts copy under .claude/skills/ui-ux-pro-max/
-  // (the copy Claude Code actually loads when this repo is a plugin).
-  for (const dir of orchestratorDirsToSync) {
-    await diffDir(
-      join(sourceRoot, dir),
-      join(orchestratorSkillTargetRoot, dir),
-      `.claude/skills/ui-ux-pro-max/${dir}`,
-      drift,
-    );
+  // Orchestrator skill data/scripts copies under .claude/ and .cursor/.
+  for (const { root, label } of orchestratorSkillTargets) {
+    for (const dir of orchestratorDirsToSync) {
+      await diffDir(join(sourceRoot, dir), join(root, dir), `${label}/${dir}`, drift);
+    }
   }
 
   if (drift.length > 0) {
@@ -192,12 +190,14 @@ async function syncAssets() {
     await syncDir(join(skillsSourceRoot, name), join(skillsTarget, name));
   }
 
-  // Orchestrator skill's own data/scripts copy under .claude/skills/ui-ux-pro-max/.
-  for (const dir of orchestratorDirsToSync) {
-    await syncDir(join(sourceRoot, dir), join(orchestratorSkillTargetRoot, dir));
+  // Orchestrator skill data/scripts copies under .claude/ and .cursor/.
+  for (const { root } of orchestratorSkillTargets) {
+    for (const dir of orchestratorDirsToSync) {
+      await syncDir(join(sourceRoot, dir), join(root, dir));
+    }
   }
 
-  console.log('Synced CLI assets + .claude/skills/ui-ux-pro-max data/scripts from src/ui-ux-pro-max, and 6 sub-skills (normalized to LF).');
+  console.log('Synced CLI assets + .claude/.cursor ui-ux-pro-max data/scripts from src/ui-ux-pro-max, and 6 sub-skills (normalized to LF).');
 }
 
 if (checkOnly) {
